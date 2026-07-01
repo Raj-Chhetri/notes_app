@@ -11,7 +11,8 @@ class NoteBinding extends Bindings{
         final service = NoteService();
         await service.init();
         return service;
-      }
+      },
+      permanent: true
     );
 
     Get.lazyPut(() => NoteController());

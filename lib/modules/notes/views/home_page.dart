@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "Notes",
@@ -34,13 +35,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
 
-      body: Column(
-        children: [
-          Divider(
-            color: Colors.black,
-            thickness: 0.90,
-          ),
-
+      body:
           Expanded(
             child: Obx((){
               if(controller.isLoading.value){
@@ -82,13 +77,14 @@ class HomePage extends StatelessWidget {
                           );
                         },
                       );
-                    }
+                    }, 
+                    onDelete: () {
+                      controller.deleteNote(note);
+                    },
                   );
                 },
               );
             }),
-          )
-        ],
       ),
     );
   }

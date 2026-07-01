@@ -9,7 +9,7 @@ class NoteEditorPage extends StatefulWidget {
 
   const NoteEditorPage({
     super.key,
-    this.note
+    this.note,
   });
 
   @override
@@ -23,6 +23,8 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   late TextEditingController titleController;
   late TextEditingController contentController;
 
+  bool savedAlready = false;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,12 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   }
 
   void saveNote() {
+    if(savedAlready){
+      return;
+    }
+
+    savedAlready = true;
+
     final title = titleController.text.trim();
     final content = contentController.text.trim();
 
@@ -57,40 +65,60 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: (){
-            saveNote();
-            Get.back();
-          }, 
-          icon: Icon(Icons.arrow_back_rounded)
-        ),
-      ),
-
-      body: Column(
-        children: [
-          TextField(
-            controller: titleController,
-            decoration: InputDecoration(
-              hintText: 'Title'
-            ),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        saveNote();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: (){
+              saveNote();
+              Get.back();
+            }, 
+            icon: Icon(Icons.arrow_back_rounded)
           ),
-
-          SizedBox(height: 20,),
-
-          Expanded(
-            child: TextField(
-              controller: contentController,
-              maxLines: null,
-              expands: true,
-              decoration: InputDecoration(
-                hintText: 'Write something...'
+        ),
+      
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: titleController,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Title',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12)
+                  )
+                ),
               ),
-            ),
-          )
-
-        ],
+          
+              SizedBox(height: 20,),
+          
+              Expanded(
+                child: TextField(
+                    controller: contentController,
+                    style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18
+                    ),
+                    maxLines: null,
+                    expands: true,
+                    decoration: InputDecoration(
+                      hintText: 'Write something...',
+                    ),
+                  ),
+              ),
+          
+            ],
+          ),
+        ),
       ),
     );
   }
